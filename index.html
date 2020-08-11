@@ -143,13 +143,13 @@
 				},
 				getAllLieux: async function () {
 					// console.log("fonction pour recup tous les lieux");
-					let response = await fetch('http://my-json-server.typicode.com/OrAmNiXe/Fake-JSON-Data/posts', { method: 'GET' }); //https://api.mocki.io/v1/ee3dd2bf
+					let response = await fetch('http://periguay-places.epizy.com/lieux', { method: 'GET' }); //https://api.mocki.io/v1/ee3dd2bf
 					this.allLieux = await response.json();
 					// console.log("Resultat = ", this.allLieux);
 				},
 				getLieuxById: async function (id) {
 					// console.log("fonction pour recupérer un lieu grâce à son Id");
-					let response = await fetch('http://my-json-server.typicode.com/OrAmNiXe/Fake-JSON-Data/posts/' + id, { method: 'GET' });
+					let response = await fetch('http://periguay-places.epizy.com/lieux/' + id, { method: 'GET' });
 					this.lieuxById.push(await response.json());
 					// console.log("Resultat = ", this.lieuxById);
 				}
