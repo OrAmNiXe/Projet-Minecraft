@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Projet Minecraft</title>
+	<link rel="icon" type="image/png" href="LogoMinecraft.png">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<!-- La barre de navigation du site -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand">Site du serveur Minecraft du Periguay</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+				aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarColor02">
+				<!-- <ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Features</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Pricing</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">About</a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control mr-sm-2" type="text" placeholder="Search">
+					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+				</form> -->
+			</div>
+		</nav>
+		<!-- Fin de la barre de navigation et début du corps du site -->
+		<div class="container" style="padding: 15px;">
+			<h1>Vous êtes : <input type="text" v-model="user"></h1>
+			<h1 v-if="user">Bienvenue {{ user }}</h1>
+			<br>
+			<div>
+				<h1>Différents boutons pour récupérer les différentes données</h1>
+				<ul>
+					<li>
+						<h3>Ce bouton sert à récupérer tous les lieux du serveur Miecraft du Periguay</h3>
+						<button v-on:click="getAllLieux" type="button" class="btn btn-primary">Récupérer</button>
+					</li>
+					<li>
+						<h3>Ce bouton sert à récupérer un lieu grâce à son Id</h3>
+						<p>Quel numéro de lieu voulez vous : <input type="text" v-model="id"></p>
+						<button v-if="id" v-on:click="getLieuxById(id)" type="button"
+							class="btn btn-primary">Récupérer</button>
+					</li>
+				</ul>
+				<p v-if="allLieux.length > 0">
+					Résultats de la requête pour récupérer tous les lieux :
+					<br />
+					{{ allLieux }}
+				</p>
+				<p v-if="lieuxById.length > 0">
+					Résultats de la requête pour récupérer un lieu grâce à son Id :
+					<br />
+					{{ lieuxById }}
+				</p>
+			</div>
+
+			<h1 v-if="allLieux.length > 0" v-bind:class="affichage">Les différents lieux du serveur Minecraft du
+				Periguay</h1>
+			<div class="row">
+				<fiche-lieux v-for="lieu in allLieux" v-bind:key="lieu.id" v-bind:lieu="lieu"
+					v-on:lieu_ajoute="ajouterCarte" role="ajouter">
+				</fiche-lieux>
+			</div>
+
+			<h1 v-if="lieuxById.length > 0" v-bind:class="affichage">Un lieu selon son Id du serveur Minecraft du Periguay</h1>
+			<div class="row">
+				<fiche-lieux v-for="lieu in lieuxById" v-bind:key="lieu.id" v-bind:lieu="lieu"
+					v-on:lieu_ajoute="ajouterCarte" role="ajouter">
+				</fiche-lieux>
+			</div>
+
+			<h1 v-if="carte.length > 0">Lieux ajoutés dans un 2ème tableau</h1>
+			<div class="row">
+				<fiche-lieux v-for="lieu in carte" v-bind:key="lieu.id" v-bind:lieu="lieu" role="recap"></fiche-lieux>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		Vue.component('fiche-lieux', {
+			template: `
+            <div class="col-3">
+                <p class="jumbotron">
+					Id : {{ lieu.id }}
+					<br>
+					Nom : {{ lieu.nom }}
+					<br>
+					Propriétaire : {{ lieu.joueur }}
+					<br>
+					Monde : {{ lieu.monde }}
+					<br>
+					Coordonnées x : {{ lieu.x }}
+					<br>
+					Coordonnées y : {{ lieu.y }}
+					<br>
+					Coordonnées z : {{ lieu.z }}
+					<br>
+                    <button v-on:click="ajouter_a_la_carte(lieu)" v-if="role == 'ajouter'" type="button" class="btn btn-primary">Ajouter à la carte</button>
+                </p>
+            </div>
+            `,
+			props: ['lieu', 'role'],
+			methods: {
+				ajouter_a_la_carte: function (lieu) {
+					this.$emit('lieu_ajoute', lieu)
+				}
+			}
+		})
+
+		var app = new Vue({
+			el: "#app",
+			data: {
+				user: "",
+				affichage: "display-4",
+				allLieux: [],
+				lieuxById: [],
+				carte: [],
+				id: ""
+			},
+			methods: {
+				ajouterCarte: function (lieu) {
+					this.carte.push(lieu);
+				},
+				getAllLieux: async function () {
+					// console.log("fonction pour recup tous les lieux");
+					let response = await fetch('http://my-json-server.typicode.com/OrAmNiXe/Fake-JSON-Data/posts', { method: 'GET' }); //https://api.mocki.io/v1/ee3dd2bf
+					this.allLieux = await response.json();
+					// console.log("Resultat = ", this.allLieux);
+				},
+				getLieuxById: async function (id) {
+					// console.log("fonction pour recupérer un lieu grâce à son Id");
+					let response = await fetch('http://my-json-server.typicode.com/OrAmNiXe/Fake-JSON-Data/posts/' + id, { method: 'GET' });
+					this.lieuxById.push(await response.json());
+					// console.log("Resultat = ", this.lieuxById);
+				}
+			}
+		})
+	</script>
+</body>
+
+</html>
