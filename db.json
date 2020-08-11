@@ -1,0 +1,34 @@
+{
+    "posts": [
+        {
+            "x": -1000,
+            "y": 70,
+            "z": 900,
+            "id": 1,
+            "nom": "Village 1",
+            "monde": "Overworld",
+            "joueur": 3
+        },
+        {
+            "x": -1851,
+            "y": 67,
+            "z": 91,
+            "id": 2,
+            "nom": "L'entrée du portail de l'end",
+            "monde": "Overworld",
+            "joueur": 3
+        },
+        {
+            "x": -78,
+            "y": 63,
+            "z": -206,
+            "id": 3,
+            "nom": "L'observatoire",
+            "monde": "Overworld",
+            "joueur": 2
+        }
+    ],
+    "profile": {
+        "name": "typicode"
+    }
+}
