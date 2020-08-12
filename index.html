@@ -52,6 +52,10 @@
 				<h1>Différents boutons pour récupérer les différentes données</h1>
 				<ul>
 					<li>
+						<h3>Ce bouton sert à récupérer tous les lieux du serveur Miecraft du Periguay depuis l'API</h3>
+						<button v-on:click="getAllLieuxAPI" type="button" class="btn btn-primary">Récupérer</button>
+					</li>
+					<li>
 						<h3>Ce bouton sert à récupérer tous les lieux du serveur Miecraft du Periguay</h3>
 						<button v-on:click="getAllLieux" type="button" class="btn btn-primary">Récupérer</button>
 					</li>
@@ -82,7 +86,8 @@
 				</fiche-lieux>
 			</div>
 
-			<h1 v-if="lieuxById.length > 0" v-bind:class="affichage">Un lieu selon son Id du serveur Minecraft du Periguay</h1>
+			<h1 v-if="lieuxById.length > 0" v-bind:class="affichage">Un lieu selon son Id du serveur Minecraft du
+				Periguay</h1>
 			<div class="row">
 				<fiche-lieux v-for="lieu in lieuxById" v-bind:key="lieu.id" v-bind:lieu="lieu"
 					v-on:lieu_ajoute="ajouterCarte" role="ajouter">
@@ -141,15 +146,21 @@
 				ajouterCarte: function (lieu) {
 					this.carte.push(lieu);
 				},
+				getAllLieuxAPI: async function () {
+					// console.log("fonction pour recup tous les lieux");
+					let response = await fetch('http://periguay-places.epizy.com/lieux', { method: 'GET' });
+					this.allLieux = await response.json();
+					// console.log("Resultat = ", this.allLieux);
+				},
 				getAllLieux: async function () {
 					// console.log("fonction pour recup tous les lieux");
-					let response = await fetch('http://periguay-places.epizy.com/lieux', { method: 'GET' }); //https://api.mocki.io/v1/ee3dd2bf
+					let response = await fetch('http://my-json-server.typicode.com/OrAmNiXe/Projet-Minecraft/posts', { method: 'GET' }); //https://api.mocki.io/v1/ee3dd2bf //http://periguay-places.epizy.com/lieux
 					this.allLieux = await response.json();
 					// console.log("Resultat = ", this.allLieux);
 				},
 				getLieuxById: async function (id) {
 					// console.log("fonction pour recupérer un lieu grâce à son Id");
-					let response = await fetch('http://periguay-places.epizy.com/lieux/' + id, { method: 'GET' });
+					let response = await fetch('http://my-json-server.typicode.com/OrAmNiXe/Projet-Minecraft/posts/' + id, { method: 'GET' });
 					this.lieuxById.push(await response.json());
 					// console.log("Resultat = ", this.lieuxById);
 				}
